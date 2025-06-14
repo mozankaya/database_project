@@ -27,14 +27,16 @@ CREATE TABLE Race (
 CREATE TABLE Clan (
     clan_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
+    description VARCHAR(255),
     member_limit INT
 );
 
 CREATE TABLE `Character` (
-    character_id INT PRIMARY KEY,
+	character_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     level INT,
+    health_point INT,
+    mana_point INT,
     player_id INT,
     race_id INT,
     clan_id INT,
@@ -42,6 +44,7 @@ CREATE TABLE `Character` (
     FOREIGN KEY (race_id) REFERENCES Race(race_id),
     FOREIGN KEY (clan_id) REFERENCES Clan(clan_id)
 );
+
 
 CREATE TABLE Mount (
     mount_id INT PRIMARY KEY,
@@ -86,7 +89,7 @@ CREATE TABLE Loot (
 
 CREATE TABLE Quest (
     quest_id INT PRIMARY KEY,
-    description TEXT,
+    description VARCHAR(255),
     xp INT
 );
 
@@ -153,15 +156,6 @@ BEGIN
 END $$
 DELIMITER ;
 
--- When a player is deleted, all characters and related data are automatically deleted as well
-DELIMITER $$
-CREATE TRIGGER after_player_delete
-AFTER DELETE ON Player
-FOR EACH ROW
-BEGIN
-    DELETE FROM `Character` WHERE player_id = OLD.player_id;
-END $$
-DELIMITER ;
 
 
 -- When a character is added, if the level is entered as less than 1, it is automatically assigned as 1.
@@ -219,7 +213,8 @@ INSERT INTO `Rank` (rank_id, title) VALUES
 
 INSERT INTO Player (player_id, username, email, password, rank_id) VALUES
 (1, 'user1', 'user1@gmail.com', '1234', 1),
-(2, 'user2', 'user2@gmail.com', '123', 2);
+(2, 'user2', 'user2@gmail.com', '123', 2),
+(3,'user3','user3@gmail.com', '123',3);
 
 INSERT INTO Race (race_id, name, strength, intelligence, agility) VALUES
 (1, 'Nord', 10, 5, 3),
@@ -299,9 +294,9 @@ INSERT INTO GuildEvent (clan_id, event_id, title, date, difficulty, max_particip
 (2, 4, 'Dungeon Finder','2025-06-03','Easy',10),
 (1, 5, 'Which team will kill the boss first ?','2025-06-03','Hard',15);
 
-INSERT INTO `Character` (character_id, name, level, player_id, race_id, clan_id) VALUES
-(1, 'Thorin', 12, 1, 1, 1),
-(2, 'Arya', 20, 2, 2, 2);
+INSERT INTO `Character` (character_id, name, level, health_point, mana_point, player_id, race_id, clan_id) VALUES
+(1, 'Thorin', 12, 150, 70, 1, 1, 1),
+(2, 'Arya', 20, 120, 90, 2, 2, 2);
 
 INSERT INTO Runs (character_id, dungeon_id, result) VALUES
 (1, 1, 'Win'),     -- Frost Hollow (Easy, 5)
@@ -364,6 +359,7 @@ SELECT *
 FROM Dungeon
 WHERE difficulty = 'Hard';
 
+
 DELIMITER //
 CREATE FUNCTION login(param_name VARCHAR(32),param_password VARCHAR(1024))
 RETURNS INT
@@ -400,3 +396,18 @@ BEGIN
     DELETE FROM `Character` WHERE player_id = OLD.player_id;
 END $$
 DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER before_character_delete
+BEFORE DELETE ON `Character`
+FOR EACH ROW
+BEGIN
+    DELETE FROM character_mounts WHERE character_id = OLD.character_id;
+    DELETE FROM character_weapon WHERE character_id = OLD.character_id;
+    DELETE FROM character_quest WHERE character_id = OLD.character_id;
+    DELETE FROM runs WHERE character_id = OLD.character_id;
+END $$
+DELIMITER ;
+
+
