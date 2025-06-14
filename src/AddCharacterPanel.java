@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class AddCharacterPanel extends JPanel {
     private int playerId;
-    private CharacterInfoPanel infoPanel;  // karakter paneline referans
+    private CharacterInfoPanel infoPanel;
     private JTextField nameField;
     private JComboBox<String> raceComboBox;
     private JButton addButton;
@@ -75,12 +75,12 @@ public class AddCharacterPanel extends JPanel {
                 if (rows > 0) {
                     JOptionPane.showMessageDialog(this, "Character added successfully!");
 
-                    // Yeni karakteri hemen göster
+
                     if (infoPanel != null) {
                         infoPanel.refreshCharacters();
                     }
 
-                    nameField.setText("");  // alanları temizle
+                    nameField.setText("");
                     raceComboBox.setSelectedIndex(0);
                 } else {
                     JOptionPane.showMessageDialog(this, "Character could not be added.");
