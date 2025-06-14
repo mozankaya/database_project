@@ -1,7 +1,4 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.sql.*;
 
 public class QueryFrame extends JFrame {
     private int playerId;
@@ -18,6 +15,8 @@ public class QueryFrame extends JFrame {
 
         tabbedPane.addTab("SQL Queries", new QueryPanel());
         tabbedPane.addTab("My Characters", new CharacterInfoPanel(playerId));
+
+        tabbedPane.addTab("Add Character", new AddCharacterPanel(playerId));
 
         add(tabbedPane);
     }
