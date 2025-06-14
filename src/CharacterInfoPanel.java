@@ -304,6 +304,11 @@ public class CharacterInfoPanel extends JPanel {
             return name;
         }
     }
+    public void refreshCharacters() {
+        characterSelector.removeAllItems();
+        loadCharactersForPlayer();
+    }
+
 
 
 }

@@ -4,13 +4,17 @@ import java.sql.*;
 
 public class AddCharacterPanel extends JPanel {
     private int playerId;
+    private CharacterInfoPanel infoPanel;  // karakter paneline referans
     private JTextField nameField;
     private JComboBox<String> raceComboBox;
     private JButton addButton;
 
-    public AddCharacterPanel(int playerId) {
+    public AddCharacterPanel(int playerId, CharacterInfoPanel infoPanel) {
         this.playerId = playerId;
+        this.infoPanel = infoPanel;
+
         setLayout(new GridLayout(4, 1, 10, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         nameField = new JTextField();
         raceComboBox = new JComboBox<>();
@@ -36,6 +40,7 @@ public class AddCharacterPanel extends JPanel {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load races.");
         }
     }
 
@@ -44,7 +49,7 @@ public class AddCharacterPanel extends JPanel {
         String raceName = (String) raceComboBox.getSelectedItem();
 
         if (name.isEmpty() || raceName == null) {
-            JOptionPane.showMessageDialog(this, "Please enter name and select race.");
+            JOptionPane.showMessageDialog(this, "Please enter a name and select a race.");
             return;
         }
 
@@ -57,6 +62,7 @@ public class AddCharacterPanel extends JPanel {
 
             raceStmt.setString(1, raceName);
             ResultSet rs = raceStmt.executeQuery();
+
             if (rs.next()) {
                 int raceId = rs.getInt("race_id");
 
@@ -65,9 +71,19 @@ public class AddCharacterPanel extends JPanel {
                 insertStmt.setInt(3, raceId);
 
                 int rows = insertStmt.executeUpdate();
-                if (rows > 0) {
-                    JOptionPane.showMessageDialog(this, "Character added!");
 
+                if (rows > 0) {
+                    JOptionPane.showMessageDialog(this, "Character added successfully!");
+
+                    // Yeni karakteri hemen göster
+                    if (infoPanel != null) {
+                        infoPanel.refreshCharacters();
+                    }
+
+                    nameField.setText("");  // alanları temizle
+                    raceComboBox.setSelectedIndex(0);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Character could not be added.");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Race not found.");

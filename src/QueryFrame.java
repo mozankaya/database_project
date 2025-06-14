@@ -14,9 +14,10 @@ public class QueryFrame extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("SQL Queries", new QueryPanel());
-        tabbedPane.addTab("My Characters", new CharacterInfoPanel(playerId));
+        CharacterInfoPanel infoPanel = new CharacterInfoPanel(playerId);
+        tabbedPane.addTab("My Characters", infoPanel);
 
-        tabbedPane.addTab("Add Character", new AddCharacterPanel(playerId));
+        tabbedPane.addTab("Add Character", new AddCharacterPanel(playerId,infoPanel));
 
         add(tabbedPane);
     }
