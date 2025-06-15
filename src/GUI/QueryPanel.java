@@ -14,7 +14,7 @@ public class QueryPanel extends JPanel {
 
     private final String[] queryTitles = {
             "Characters with Axe in Assasins Clan",
-            "Dungeons that beatenn by characters",
+            "Dungeons that beaten by characters",
             "Characters Who Completed All Quests",
             "Clans With Avg Level > 10",
             "Characters Who Lost But Level > 10",
@@ -30,7 +30,7 @@ public class QueryPanel extends JPanel {
 
     private final String[] queries = {
             "CALL CharactersWithAxeInAssasinsClan()",
-            "CALL DungeonsAndWinners()",
+            "CALL DungeonsBeatenbyCharacters",
             "CALL CharactersCompletedAllQuests()",
             "CALL ClansWithAvgLevelGreaterThan10()",
             "CALL CharactersLostWithHighLevel()",
