@@ -414,7 +414,6 @@ DELIMITER ;
 
 
 
-
 -- Procedures for Queries
 
 DELIMITER $$
@@ -433,7 +432,7 @@ BEGIN
       );
 END$$
 
-CREATE PROCEDURE DungeonsAndWinners()
+CREATE PROCEDURE DungeonsBeatenbyCharacters()
 BEGIN
     SELECT d.name AS dungeon_name
     FROM Runs r
