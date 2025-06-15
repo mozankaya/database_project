@@ -10,7 +10,7 @@ public class CharacterInfoPanel extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private JComboBox<CharacterItem> characterSelector;
-    private JButton dungeonButton, mountButton, weaponButton, questButton, raceButton, clanButton;
+    private JButton dungeonButton, mountButton, weaponButton, questButton, raceButton, clanButton, deleteButton;
 
     public CharacterInfoPanel(int playerId) {
         this.playerId = playerId;
@@ -54,6 +54,7 @@ public class CharacterInfoPanel extends JPanel {
         questButton = createButton("Quests");
         raceButton = createButton("Race Info");
         clanButton = createButton("Clan Info");
+        deleteButton = createButton("Delete Character");
 
         buttonPanel.add(dungeonButton);
         buttonPanel.add(mountButton);
@@ -61,6 +62,7 @@ public class CharacterInfoPanel extends JPanel {
         buttonPanel.add(questButton);
         buttonPanel.add(raceButton);
         buttonPanel.add(clanButton);
+        buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
 
@@ -70,6 +72,7 @@ public class CharacterInfoPanel extends JPanel {
         questButton.addActionListener(e -> loadQuests());
         raceButton.addActionListener(e -> loadRaceInfo());
         clanButton.addActionListener(e -> loadClanInfo());
+        deleteButton.addActionListener(e -> deleteCharacter());
 
         loadCharactersForPlayer();
     }
@@ -285,6 +288,19 @@ public class CharacterInfoPanel extends JPanel {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void deleteCharacter() {
+        int result = JOptionPane.showConfirmDialog(null,"Are you sure?","Confirmation",JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION){
+            try (Connection conn = DB.getConnection()) {
+                Statement stmt = conn.createStatement();
+                stmt.execute("DELETE FROM `Character` c WHERE c.character_id ="+characterId);
+                refreshCharacters();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
