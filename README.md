@@ -1,9 +1,12 @@
-Mehmed Okay Aslan
-Mehmet Ozan Kaya
-Salih Ağralı
-Serkan Acar
 
 # MMORPG Database Management System
+
+## Authors
+
+- **Mehmed Okay Aslan**
+- **Mehmet Ozan Kaya**
+- **Salih Ağralı**
+- **Serkan Acar**
 
 ## Description
 
