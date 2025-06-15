@@ -219,7 +219,9 @@ INSERT INTO Player (player_id, username, email, password, rank_id) VALUES
 INSERT INTO Race (race_id, name, strength, intelligence, agility) VALUES
 (1, 'Nord', 10, 5, 3),
 (2, 'Vaegir', 7, 8, 4),
-(3, 'Svadya', 6, 6, 6);
+(3, 'Svadya', 6, 6, 6),
+(4,'Rodok', 5,3,9),
+(5,'Kergit',12,10,10);
 
 INSERT INTO Clan (clan_id, name, description,member_limit) VALUES
 (1, 'Warriors', 'Clan of real warriors',15),
@@ -410,4 +412,114 @@ BEGIN
 END $$
 DELIMITER ;
 
+
+
+
+-- Procedures for Queries
+
+DELIMITER $$
+
+CREATE PROCEDURE CharactersWithSpearInAssasinsClan()
+BEGIN
+    SELECT c.name AS character_name
+    FROM `Character` c
+    JOIN Clan cl ON c.clan_id = cl.clan_id
+    WHERE cl.name = 'Assasins'
+      AND c.character_id IN (
+        SELECT character_id
+        FROM character_weapon cw
+        JOIN Weapon w ON cw.weapon_id = w.weapon_id
+        WHERE w.type = 'Spear'
+      );
+END$$
+
+CREATE PROCEDURE DungeonsAndWinners()
+BEGIN
+    SELECT d.name AS dungeon_name
+    FROM Runs r
+    JOIN Dungeon d ON r.dungeon_id = d.dungeon_id
+    WHERE r.result = 'Win';
+END$$
+
+
+CREATE PROCEDURE CharactersCompletedAllQuests()
+BEGIN
+    SELECT c.name AS character_name
+    FROM `Character` c
+    WHERE NOT EXISTS (
+        SELECT q.quest_id
+        FROM Quest q
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM character_quest cq
+            WHERE cq.character_id = c.character_id
+              AND cq.quest_id = q.quest_id
+        )
+    );
+END$$
+
+
+CREATE PROCEDURE ClansWithAvgLevelGreaterThan10()
+BEGIN
+    SELECT cl.name AS clan_name
+    FROM Clan cl
+    JOIN `Character` c ON cl.clan_id = c.clan_id
+    GROUP BY cl.clan_id
+    HAVING AVG(c.level) > 10;
+END$$
+
+CREATE PROCEDURE CharactersLostWithHighLevel()
+BEGIN
+    SELECT DISTINCT c.name
+    FROM `Character` c
+    JOIN Runs r ON c.character_id = r.character_id
+    WHERE r.result = 'Lose' AND c.level > 10;
+END$$
+
+CREATE PROCEDURE CharactersWithManyWeaponsAndMounts()
+BEGIN
+    SELECT c.name
+    FROM `Character` c
+    JOIN character_weapon cw ON c.character_id = cw.character_id
+    WHERE c.character_id IN (
+        SELECT cm.character_id
+        FROM character_mounts cm
+        GROUP BY cm.character_id
+        HAVING COUNT(DISTINCT cm.mount_id) > 1
+    )
+    GROUP BY c.character_id
+    HAVING COUNT(DISTINCT cw.weapon_id) > 1;
+END$$
+
+CREATE PROCEDURE UpcomingEvents()
+BEGIN
+    SELECT ge.title AS event_title
+    FROM GuildEvent ge
+    JOIN Clan cl ON ge.clan_id = cl.clan_id
+    WHERE ge.date >= CURDATE()
+    ORDER BY ge.date;
+END$$
+
+CREATE PROCEDURE MostPopularDungeon()
+BEGIN
+    SELECT d.name AS dungeon_name
+    FROM Runs r
+    JOIN Dungeon d ON r.dungeon_id = d.dungeon_id
+    GROUP BY d.dungeon_id
+    ORDER BY COUNT(*) DESC
+    LIMIT 1;
+END$$
+
+
+CREATE PROCEDURE ShowAllLoots()
+BEGIN
+    SELECT * FROM Loot;
+END$$
+
+CREATE PROCEDURE ShowAllBosses()
+BEGIN
+    SELECT * FROM Boss;
+END$$
+
+DELIMITER ;
 
