@@ -28,7 +28,7 @@ public class QueryPanel extends JPanel {
 
             "SELECT cl.name AS clan_name FROM Clan cl JOIN `Character` c ON cl.clan_id = c.clan_id GROUP BY cl.clan_id HAVING AVG(c.level) > 10",
 
-            "SELECT c.name FROM `Character` c JOIN Runs r ON c.character_id = r.character_id WHERE r.result = 'Lose' AND c.level > 10",
+            "SELECT DISTINCT c.name FROM `Character` c JOIN Runs r ON c.character_id = r.character_id WHERE r.result = 'Lose' AND c.level > 10",
 
             "SELECT c.name FROM `Character` c JOIN character_weapon cw ON c.character_id = cw.character_id WHERE c.character_id IN ( SELECT cm.character_id FROM character_mounts cm GROUP BY cm.character_id HAVING COUNT(DISTINCT cm.mount_id) > 1) GROUP BY c.character_id HAVING COUNT(DISTINCT cw.weapon_id) > 1",
 
