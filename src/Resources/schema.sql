@@ -244,9 +244,10 @@ INSERT INTO `Rank` (rank_id, title) VALUES
 (3, 'Legend');
 
 INSERT INTO Player (player_id, username, email, password, rank_id) VALUES
-(1, 'user1', 'user1@gmail.com', '1234', 1),
-(2, 'user2', 'user2@gmail.com', '123', 2),
-(3,'user3','user3@gmail.com', '123',3);
+(1, 'Ozan', 'ozan@gmail.com', '123', 1),
+(2, 'Serkan', 'serkan@gmail.com', '123', 2),
+(3, 'Salih', 'salih@gmail.com', '123', 3),
+(4, 'Okay', 'okay@gmail.com', '123', 1);
 
 INSERT INTO Race (race_id, name, strength, intelligence, agility) VALUES
 (1, 'Nord', 10, 5, 3),
@@ -329,20 +330,28 @@ INSERT INTO GuildEvent (clan_id, event_id, title, date, difficulty, max_particip
 (1, 5, 'Which team will kill the boss first ?','2025-06-03','Hard',15);
 
 INSERT INTO `Character` (character_id, name, level, health_point, mana_point, player_id, race_id, clan_id) VALUES
-(1, 'Thorin', 12, 150, 70, 1, 1, 1),
-(2, 'Arya', 20, 120, 90, 2, 2, 2);
+(1, 'Thorin', 12, 150, 70, 1, 5, 1),  -- Ozan
+(2, 'Arya', 20, 120, 90, 2, 2, 2),    -- Serkan
+(3, 'Kael', 22, 200, 120, 3, 4, 2),   -- Salih
+(4, 'Mira', 15, 130, 85, 4, 1, 1);    -- Okay
 
 INSERT INTO Runs (character_id, dungeon_id, result) VALUES
-(1, 1, 'Win'),     -- Frost Hollow (Easy, 5)
-(1, 3, 'Win'),     -- Whispering Cavern (Normal, 10)
-(1, 5, 'Lose'),    -- Forgotten Mines (Easy, 3)
-(1, 2, 'Lose'),    -- Volcanic Depths (Hard, 15)
-(1, 6, 'Win'),     -- Nuketown (Easy, 2)
-(2, 1, 'Lose'),    -- Frost Hollow
-(2, 2, 'Win'),     -- Volcanic Depths
-(2, 4, 'Win'),     -- Sunken Temple
-(2, 7, 'Lose'),    -- Jagged Mountains (Hard, 25)
-(2, 10, 'Win');    -- Demolished Goblin Inn
+(1, 1, 'Win'),
+(1, 2, 'Lose'),
+(1, 3, 'Win'),
+
+(2, 2, 'Win'),
+(2, 4, 'Win'),
+(2, 7, 'Lose'),
+
+(3, 6, 'Win'),
+(3, 7, 'Win'),
+(3, 8, 'Win'),
+(3, 9, 'Win'),
+
+(4, 1, 'Lose'),
+(4, 5, 'Win'),
+(4, 10, 'Win');
 
 INSERT INTO required_dungeon (dungeon_id, required_dungeon_id) VALUES
 (2, 1),   -- Volcanic Depths requires Frost Hollow
@@ -357,26 +366,28 @@ INSERT INTO required_dungeon (dungeon_id, required_dungeon_id) VALUES
 (7, 4);   -- Jagged Mountains also requires Sunken Temple
 
 INSERT INTO character_mounts (character_id, mount_id) VALUES
-(1, 3),
 (1, 2),
-(1, 4),
-
-(2, 2),
-(2, 4);
+(2, 4),
+(3, 3),
+(4, 5);
 
 INSERT INTO character_weapon (character_id, weapon_id) VALUES
-(1, 3),
-
-(2, 2),
-(2, 5);
+(1, 3),  -- Thorin: Axe
+(2, 4),  -- Arya: Bow
+(2, 5),  -- Arya: Bow
+(4, 4);  -- Mira: Axe
 
 INSERT INTO character_quest (character_id, quest_id) VALUES
-(1, 2),  -- Equip a weapon
-(1, 3),  -- First dungeon
-
-(2, 3),  -- First dungeon
-(2, 4),  -- Clan event
-(2, 5);  -- No-damage boss kill
+(1, 2),
+(1, 3),
+(2, 3),
+(2, 4),
+(2, 5),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5),
+(4, 2);
 
 CREATE VIEW view_easy_dungeons AS
 SELECT *
@@ -553,4 +564,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
