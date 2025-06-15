@@ -205,6 +205,38 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- When a character is created their stats are adjusted based on their race.
+DELIMITER $$
+CREATE TRIGGER before_character_start_stats
+BEFORE INSERT ON `Character`
+FOR EACH ROW
+BEGIN
+    DECLARE str INT;
+    DECLARE agi INT;
+    DECLARE intl INT;
+
+    SELECT strength, agility, intelligence
+    INTO str, agi, intl
+    FROM race
+    WHERE race_id = NEW.race_id;
+
+    SET NEW.health_point = NEW.health_point + (str * 2) + (agi * 1.5);
+    SET NEW.mana_point = NEW.health_point + (intl * 2) + (agi * 1.5);
+END $$
+DELIMITER ;
+
+-- When a character levels up their health and mana go up by 10.
+DELIMITER $$
+CREATE TRIGGER level_up_stats
+BEFORE UPDATE ON `Character`
+FOR EACH ROW
+BEGIN
+    IF NEW.level = OLD.level + 1 THEN
+        SET NEW.health_point = OLD.health_point + 10, NEW.mana_point = OLD.mana_point + 10;
+    END IF;
+END $$
+DELIMITER ;
+
 
 INSERT INTO `Rank` (rank_id, title) VALUES
 (1, 'Newbie'),

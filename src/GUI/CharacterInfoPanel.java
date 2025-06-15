@@ -92,7 +92,7 @@ public class CharacterInfoPanel extends JPanel {
     private void loadCharactersForPlayer() {
         try (Connection conn = DB.getConnection();
              PreparedStatement stmt = conn.prepareStatement("""
-                 SELECT character_id, name, level FROM `Character` WHERE player_id = ?
+                 SELECT character_id, name, level, health_point, mana_point FROM `Character` WHERE player_id = ?
              """)) {
             stmt.setInt(1, playerId);
             ResultSet rs = stmt.executeQuery();
@@ -100,7 +100,9 @@ public class CharacterInfoPanel extends JPanel {
                 int id = rs.getInt("character_id");
                 String name = rs.getString("name");
                 int level = rs.getInt("level");
-                characterSelector.addItem(new CharacterItem(id, name, level));
+                int hp = rs.getInt("health_point");
+                int mp = rs.getInt("mana_point");
+                characterSelector.addItem(new CharacterItem(id, name, level,hp,mp));
             }
 
             if (characterSelector.getItemCount() > 0) {
@@ -119,7 +121,7 @@ public class CharacterInfoPanel extends JPanel {
         CharacterItem selected = (CharacterItem) characterSelector.getSelectedItem();
         if (selected != null) {
             characterId = selected.id;
-            nameLabel.setText("Character: " + selected.name + " (Level " + selected.level + ")");
+            nameLabel.setText("Character: " + selected.name + " (Level " + selected.level + " HP:" + selected.health_point+" MP:" +selected.mana_point+")");
         }
     }
 
@@ -313,11 +315,15 @@ public class CharacterInfoPanel extends JPanel {
         int id;
         String name;
         int level;
+        int health_point;
+        int mana_point;
 
-        CharacterItem(int id, String name, int level) {
+        CharacterItem(int id, String name, int level, int health_point, int mana_point) {
             this.id = id;
             this.name = name;
             this.level = level;
+            this.health_point = health_point;
+            this.mana_point = mana_point;
         }
 
         public String toString() {
@@ -328,7 +334,4 @@ public class CharacterInfoPanel extends JPanel {
         characterSelector.removeAllItems();
         loadCharactersForPlayer();
     }
-
-
-
 }

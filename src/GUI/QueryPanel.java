@@ -13,8 +13,8 @@ public class QueryPanel extends JPanel {
     private DefaultTableModel tableModel;
 
     private final String[] queryTitles = {
-            "Characters with Spear in Assassins Clan",
-            "Dungeons Beaten by Characters",
+            "Characters with Axe in Assasins Clan",
+            "Dungeons that beatenn by characters",
             "Characters Who Completed All Quests",
             "Clans With Avg Level > 10",
             "Characters Who Lost But Level > 10",
@@ -22,12 +22,15 @@ public class QueryPanel extends JPanel {
             "Upcoming Events",
             "Most Popular Dungeon",
             "Show All Loots",
-            "Show All Bosses"
+            "Show All Bosses",
+            "Easy Dungeons and Bosses",
+            "Normal Dungeons and Bosses",
+            "Hard Dungeons and Bosses"
     };
 
     private final String[] queries = {
-            "CALL CharactersWithSpearInAssasinsClan()",
-            "CALL  DungeonsBeatenbyCharacters()",
+            "CALL CharactersWithAxeInAssasinsClan()",
+            "CALL DungeonsAndWinners()",
             "CALL CharactersCompletedAllQuests()",
             "CALL ClansWithAvgLevelGreaterThan10()",
             "CALL CharactersLostWithHighLevel()",
@@ -35,7 +38,16 @@ public class QueryPanel extends JPanel {
             "CALL UpcomingEvents()",
             "CALL MostPopularDungeon()",
             "CALL ShowAllLoots()",
-            "CALL ShowAllBosses()"
+            "CALL ShowAllBosses()",
+
+            "SELECT d.name AS dungeon_name, d.difficulty, b.name AS boss_name " +
+                    "FROM view_easy_dungeons d JOIN Boss b ON b.dungeon_id = d.dungeon_id",
+
+            "SELECT d.name AS dungeon_name, d.difficulty, b.name AS boss_name " +
+                    "FROM view_normal_dungeons d JOIN Boss b ON b.dungeon_id = d.dungeon_id",
+
+            "SELECT d.name AS dungeon_name, d.difficulty, b.name AS boss_name " +
+                    "FROM view_hard_dungeons d JOIN Boss b ON b.dungeon_id = d.dungeon_id"
     };
 
     public QueryPanel() {
@@ -60,32 +72,48 @@ public class QueryPanel extends JPanel {
         int index = querySelector.getSelectedIndex();
         String sql = queries[index];
 
-        try (Connection connection = DB.getConnection();
-             CallableStatement stmt = connection.prepareCall(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        // Eğer sorgu "CALL" ile başlıyorsa CallableStatement, değilse PreparedStatement kullan
+        boolean isCallable = sql.trim().toUpperCase().startsWith("CALL");
 
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnCount = meta.getColumnCount();
+        try (Connection connection = DB.getConnection()) {
+            ResultSet rs;
 
-            tableModel.setRowCount(0);
-            tableModel.setColumnCount(0);
-
-            for (int i = 1; i <= columnCount; i++) {
-                tableModel.addColumn(meta.getColumnLabel(i));
-            }
-
-            while (rs.next()) {
-                Object[] row = new Object[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    row[i] = rs.getObject(i + 1);
+            if (isCallable) {
+                try (CallableStatement stmt = connection.prepareCall(sql)) {
+                    rs = stmt.executeQuery();
+                    populateTable(rs);
                 }
-                tableModel.addRow(row);
+            } else {
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                    rs = stmt.executeQuery();
+                    populateTable(rs);
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Could not run query:\n" + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void populateTable(ResultSet rs) throws SQLException {
+        ResultSetMetaData meta = rs.getMetaData();
+        int columnCount = meta.getColumnCount();
+
+        tableModel.setRowCount(0);
+        tableModel.setColumnCount(0);
+
+        for (int i = 1; i <= columnCount; i++) {
+            tableModel.addColumn(meta.getColumnLabel(i));
+        }
+
+        while (rs.next()) {
+            Object[] row = new Object[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                row[i] = rs.getObject(i + 1);
+            }
+            tableModel.addRow(row);
         }
     }
 }
