@@ -1,3 +1,7 @@
+package GUI;
+
+import Resources.DB;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

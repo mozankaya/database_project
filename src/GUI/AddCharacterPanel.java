@@ -1,3 +1,7 @@
+package GUI;
+
+import Resources.DB;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;

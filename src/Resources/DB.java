@@ -1,3 +1,5 @@
+package Resources;
+
 import java.sql.*;
 
 public class DB {
