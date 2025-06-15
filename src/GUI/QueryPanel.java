@@ -28,7 +28,7 @@ public class QueryPanel extends JPanel {
 
             "SELECT d.name AS dungeon_name FROM Runs r JOIN Dungeon d ON r.dungeon_id = d.dungeon_id WHERE r.result = 'Win'",
 
-            "SELECT p.username FROM Player p JOIN `Character` c ON p.player_id = c.player_id WHERE NOT EXISTS ( SELECT q.quest_id FROM Quest q WHERE NOT EXISTS ( SELECT 1 FROM character_quest cq WHERE cq.character_id = c.character_id AND cq.quest_id = q.quest_id))",
+            "SELECT c.name AS character_name FROM `Character` c WHERE NOT EXISTS ( SELECT q.quest_id FROM Quest q WHERE NOT EXISTS ( SELECT 1 FROM character_quest cq WHERE cq.character_id = c.character_id AND cq.quest_id = q.quest_id ))",
 
             "SELECT cl.name AS clan_name FROM Clan cl JOIN `Character` c ON cl.clan_id = c.clan_id GROUP BY cl.clan_id HAVING AVG(c.level) > 10",
 
