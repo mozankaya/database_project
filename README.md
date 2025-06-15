@@ -71,7 +71,7 @@ The database consists of multiple interconnected tables:
 
 ### 2. Java Swing Application Setup
 
-- Install Java JDK 8 or above.
+- Install Java JDK 21.
 - Open the Java Swing project in your preferred IDE.
 - Configure the database connection string with your MySQL server credentials.
 - Build and run the application.
