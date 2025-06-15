@@ -13,32 +13,29 @@ public class QueryPanel extends JPanel {
     private DefaultTableModel tableModel;
 
     private final String[] queryTitles = {
-            "Characters with Spear in Assasins Clan (PROC)",
-            "Dungeons and Characters Who Won (PROC)",
-            "Characters Who Completed All Quests (PROC)",
+            "Characters with Spear in Assassins Clan",
+            "Dungeons and Characters Who Won",
+            "Characters Who Completed All Quests",
             "Clans With Avg Level > 10",
             "Characters Who Lost But Level > 10",
             "Characters With >1 Weapon and >1 Mount",
             "Upcoming Events",
-            "Most Popular Dungeon"
+            "Most Popular Dungeon",
+            "Show All Loots",
+            "Show All Bosses"
     };
 
     private final String[] queries = {
             "CALL CharactersWithSpearInAssasinsClan()",
-
             "CALL DungeonsAndWinners()",
-
             "CALL CharactersCompletedAllQuests()",
-
-            "SELECT cl.name AS clan_name FROM Clan cl JOIN `Character` c ON cl.clan_id = c.clan_id GROUP BY cl.clan_id HAVING AVG(c.level) > 10",
-
-            "SELECT DISTINCT c.name FROM `Character` c JOIN Runs r ON c.character_id = r.character_id WHERE r.result = 'Lose' AND c.level > 10",
-
-            "SELECT c.name FROM `Character` c JOIN character_weapon cw ON c.character_id = cw.character_id WHERE c.character_id IN ( SELECT cm.character_id FROM character_mounts cm GROUP BY cm.character_id HAVING COUNT(DISTINCT cm.mount_id) > 1) GROUP BY c.character_id HAVING COUNT(DISTINCT cw.weapon_id) > 1",
-
-            "SELECT ge.title AS event_title FROM GuildEvent ge JOIN Clan cl ON ge.clan_id = cl.clan_id WHERE ge.date >= CURDATE() ORDER BY ge.date",
-
-            "SELECT d.name AS dungeon_name FROM Runs r JOIN Dungeon d ON r.dungeon_id = d.dungeon_id GROUP BY d.dungeon_id ORDER BY COUNT(*) DESC LIMIT 1"
+            "CALL ClansWithAvgLevelGreaterThan10()",
+            "CALL CharactersLostWithHighLevel()",
+            "CALL CharactersWithManyWeaponsAndMounts()",
+            "CALL UpcomingEvents()",
+            "CALL MostPopularDungeon()",
+            "CALL ShowAllLoots()",
+            "CALL ShowAllBosses()"
     };
 
     public QueryPanel() {
@@ -64,7 +61,7 @@ public class QueryPanel extends JPanel {
         String sql = queries[index];
 
         try (Connection connection = DB.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql);
+             CallableStatement stmt = connection.prepareCall(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             ResultSetMetaData meta = rs.getMetaData();
@@ -87,7 +84,8 @@ public class QueryPanel extends JPanel {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Could not run query", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Could not run query:\n" + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
