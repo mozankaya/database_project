@@ -450,7 +450,7 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE CharactersWithSpearInAssasinsClan()
+CREATE PROCEDURE CharactersWithAxeInAssasinsClan()
 BEGIN
     SELECT c.name AS character_name
     FROM `Character` c
@@ -460,7 +460,7 @@ BEGIN
         SELECT character_id
         FROM character_weapon cw
         JOIN Weapon w ON cw.weapon_id = w.weapon_id
-        WHERE w.type = 'Spear'
+        WHERE w.type = 'Axe'
       );
 END$$
 
