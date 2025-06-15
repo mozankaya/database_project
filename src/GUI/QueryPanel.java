@@ -14,7 +14,7 @@ public class QueryPanel extends JPanel {
 
     private final String[] queryTitles = {
             "Characters with Spear in Assassins Clan",
-            "Dungeons and Characters Who Won",
+            "Dungeons Beaten by Characters",
             "Characters Who Completed All Quests",
             "Clans With Avg Level > 10",
             "Characters Who Lost But Level > 10",
