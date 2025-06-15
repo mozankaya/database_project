@@ -13,9 +13,9 @@ public class QueryPanel extends JPanel {
     private DefaultTableModel tableModel;
 
     private final String[] queryTitles = {
-            "Characters with Spear in Assasins Clan",
-            "Dungeons and Characters Who Won",
-            "Characters Who Completed All Quests",
+            "Characters with Spear in Assasins Clan (PROC)",
+            "Dungeons and Characters Who Won (PROC)",
+            "Characters Who Completed All Quests (PROC)",
             "Clans With Avg Level > 10",
             "Characters Who Lost But Level > 10",
             "Characters With >1 Weapon and >1 Mount",
@@ -24,11 +24,11 @@ public class QueryPanel extends JPanel {
     };
 
     private final String[] queries = {
-            "SELECT c.name AS character_name FROM `Character` c JOIN Clan cl ON c.clan_id = cl.clan_id WHERE cl.name = 'Assasins' AND c.character_id IN ( SELECT character_id FROM character_weapon cw JOIN Weapon w ON cw.weapon_id = w.weapon_id WHERE w.type = 'Spear')",
+            "CALL CharactersWithSpearInAssasinsClan()",
 
-            "SELECT d.name AS dungeon_name FROM Runs r JOIN Dungeon d ON r.dungeon_id = d.dungeon_id WHERE r.result = 'Win'",
+            "CALL DungeonsAndWinners()",
 
-            "SELECT c.name AS character_name FROM `Character` c WHERE NOT EXISTS ( SELECT q.quest_id FROM Quest q WHERE NOT EXISTS ( SELECT 1 FROM character_quest cq WHERE cq.character_id = c.character_id AND cq.quest_id = q.quest_id ))",
+            "CALL CharactersCompletedAllQuests()",
 
             "SELECT cl.name AS clan_name FROM Clan cl JOIN `Character` c ON cl.clan_id = c.clan_id GROUP BY cl.clan_id HAVING AVG(c.level) > 10",
 
