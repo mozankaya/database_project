@@ -1,3 +1,5 @@
+package GUI;
+
 import javax.swing.*;
 
 public class QueryFrame extends JFrame {
@@ -13,10 +15,15 @@ public class QueryFrame extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("SQL Queries", new QueryPanel());
-        tabbedPane.addTab("My Characters", new CharacterInfoPanel(playerId));
+        QueryPanel queryPanel = new QueryPanel();
+        tabbedPane.addTab("General Stats", queryPanel);
 
-        tabbedPane.addTab("Add Character", new AddCharacterPanel(playerId));
+        CharacterInfoPanel infoPanel = new CharacterInfoPanel(playerId);
+        tabbedPane.addTab("My Characters", infoPanel);
+
+        AddCharacterPanel addCharacterPanel = new AddCharacterPanel(playerId,infoPanel);
+        tabbedPane.addTab("Add Character", addCharacterPanel);
+
 
         add(tabbedPane);
     }
