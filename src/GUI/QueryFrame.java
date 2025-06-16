@@ -16,7 +16,7 @@ public class QueryFrame extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         QueryPanel queryPanel = new QueryPanel();
-        tabbedPane.addTab("SQL Queries", queryPanel);
+        tabbedPane.addTab("General Stats", queryPanel);
 
         CharacterInfoPanel infoPanel = new CharacterInfoPanel(playerId);
         tabbedPane.addTab("My Characters", infoPanel);
